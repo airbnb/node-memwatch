@@ -9,7 +9,7 @@
 #include "memwatch.hh"
 
 extern "C" {
-    void init (v8::Handle<v8::Object> target)
+    void init (v8::Local<v8::Object> target)
     {
         Nan::HandleScope scope;
         heapdiff::HeapDiff::Initialize(target);

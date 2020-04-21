@@ -21,7 +21,7 @@
 using namespace v8;
 using namespace node;
 
-Handle<Object> g_context;
+Local<Object> g_context;
 
 class UponGCCallback : public Nan::AsyncResource {
     public:
@@ -217,7 +217,7 @@ NAN_METHOD(memwatch::trigger_gc) {
     Nan::HandleScope scope;
     int deadline_in_ms = 500;
     if (info.Length() >= 1 && info[0]->IsNumber()) {
-    		deadline_in_ms = (int)(info[0]->Int32Value()); 
+    		deadline_in_ms = (int)(info[0]->Int32Value());
     }
 #if (NODE_MODULE_VERSION >= 0x002D)
     Nan::IdleNotification(deadline_in_ms);
