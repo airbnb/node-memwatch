@@ -53,9 +53,9 @@ heapdiff::HeapDiff::Initialize ( v8::Local<v8::Object> target )
 
     Nan::SetPrototypeMethod(t, "end", End);
 
-    target->Set(Nan::New<v8::String>("HeapDiff").ToLocalChecked(), t->GetFunction(
+    Nan::Set(target, Nan::New<v8::String>("HeapDiff").ToLocalChecked(), t->GetFunction(
         v8::Isolate::GetCurrent()->GetCurrentContext()
-    ));
+    ).ToLocalChecked());
 }
 
 NAN_METHOD(heapdiff::HeapDiff::New)

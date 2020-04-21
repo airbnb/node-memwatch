@@ -104,26 +104,26 @@ static void AsyncMemwatchAfter(uv_work_t* request) {
 
         Local<Object> stats = Nan::New<v8::Object>();
 
-        stats->Set(Nan::New("gc_ts").ToLocalChecked(), javascriptNumber(b->gc_ts));
+        Nan::Set(stats, Nan::New("gc_ts").ToLocalChecked(), javascriptNumber(b->gc_ts));
 
-        stats->Set(Nan::New("gcScavengeCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcScavengeCount));
-        stats->Set(Nan::New("gcScavengeTime").ToLocalChecked(), javascriptNumber(b->stats.gcScavengeTime));
-        stats->Set(Nan::New("gcMarkSweepCompactCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcMarkSweepCompactCount));
-        stats->Set(Nan::New("gcMarkSweepCompactTime").ToLocalChecked(), javascriptNumber(b->stats.gcMarkSweepCompactTime));
-        stats->Set(Nan::New("gcIncrementalMarkingCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcIncrementalMarkingCount));
-        stats->Set(Nan::New("gcIncrementalMarkingTime").ToLocalChecked(), javascriptNumber(b->stats.gcIncrementalMarkingTime));
-        stats->Set(Nan::New("gcProcessWeakCallbacksCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcProcessWeakCallbacksCount));
-        stats->Set(Nan::New("gcProcessWeakCallbacksTime").ToLocalChecked(), javascriptNumber(b->stats.gcProcessWeakCallbacksTime));
+        Nan::Set(stats, Nan::New("gcScavengeCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcScavengeCount));
+        Nan::Set(stats, Nan::New("gcScavengeTime").ToLocalChecked(), javascriptNumber(b->stats.gcScavengeTime));
+        Nan::Set(stats, Nan::New("gcMarkSweepCompactCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcMarkSweepCompactCount));
+        Nan::Set(stats, Nan::New("gcMarkSweepCompactTime").ToLocalChecked(), javascriptNumber(b->stats.gcMarkSweepCompactTime));
+        Nan::Set(stats, Nan::New("gcIncrementalMarkingCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcIncrementalMarkingCount));
+        Nan::Set(stats, Nan::New("gcIncrementalMarkingTime").ToLocalChecked(), javascriptNumber(b->stats.gcIncrementalMarkingTime));
+        Nan::Set(stats, Nan::New("gcProcessWeakCallbacksCount").ToLocalChecked(), javascriptNumberSize(b->stats.gcProcessWeakCallbacksCount));
+        Nan::Set(stats, Nan::New("gcProcessWeakCallbacksTime").ToLocalChecked(), javascriptNumber(b->stats.gcProcessWeakCallbacksTime));
 
-        stats->Set(Nan::New("total_heap_size").ToLocalChecked(), javascriptNumberSize(b->total_heap_size));
-        stats->Set(Nan::New("total_heap_size_executable").ToLocalChecked(), javascriptNumberSize(b->total_heap_size_executable));
-        stats->Set(Nan::New("total_physical_size").ToLocalChecked(), javascriptNumberSize(b->total_physical_size));
-        stats->Set(Nan::New("total_available_size").ToLocalChecked(), javascriptNumberSize(b->total_available_size));
-        stats->Set(Nan::New("used_heap_size").ToLocalChecked(), javascriptNumberSize(b->used_heap_size));
-        stats->Set(Nan::New("heap_size_limit").ToLocalChecked(), javascriptNumberSize(b->heap_size_limit));
-        stats->Set(Nan::New("malloced_memory").ToLocalChecked(), javascriptNumberSize(b->malloced_memory));
-        stats->Set(Nan::New("peak_malloced_memory").ToLocalChecked(), javascriptNumberSize(b->peak_malloced_memory));
-        stats->Set(Nan::New("gc_time").ToLocalChecked(), javascriptNumber(b->gc_time));
+        Nan::Set(stats, Nan::New("total_heap_size").ToLocalChecked(), javascriptNumberSize(b->total_heap_size));
+        Nan::Set(stats, Nan::New("total_heap_size_executable").ToLocalChecked(), javascriptNumberSize(b->total_heap_size_executable));
+        Nan::Set(stats, Nan::New("total_physical_size").ToLocalChecked(), javascriptNumberSize(b->total_physical_size));
+        Nan::Set(stats, Nan::New("total_available_size").ToLocalChecked(), javascriptNumberSize(b->total_available_size));
+        Nan::Set(stats, Nan::New("used_heap_size").ToLocalChecked(), javascriptNumberSize(b->used_heap_size));
+        Nan::Set(stats, Nan::New("heap_size_limit").ToLocalChecked(), javascriptNumberSize(b->heap_size_limit));
+        Nan::Set(stats, Nan::New("malloced_memory").ToLocalChecked(), javascriptNumberSize(b->malloced_memory));
+        Nan::Set(stats, Nan::New("peak_malloced_memory").ToLocalChecked(), javascriptNumberSize(b->peak_malloced_memory));
+        Nan::Set(stats, Nan::New("gc_time").ToLocalChecked(), javascriptNumber(b->gc_time));
 
         // the type of event to emit
         argv[0] = Nan::New("stats").ToLocalChecked();
@@ -216,9 +216,9 @@ NAN_METHOD(memwatch::upon_gc) {
 NAN_METHOD(memwatch::trigger_gc) {
     Nan::HandleScope scope;
     int deadline_in_ms = 500;
-    if (info.Length() >= 1 && info[0]->IsNumber()) {
-    		deadline_in_ms = (int)(info[0]->Int32Value());
-    }
+    // if (info.Length() >= 1 && info[0]->IsNumber()) {
+    // 		deadline_in_ms = (int)(info[0]->Int32Value(Nan::GetCurrentContext()));
+    // }
 #if (NODE_MODULE_VERSION >= 0x002D)
     Nan::IdleNotification(deadline_in_ms);
     Nan::LowMemoryNotification();
