@@ -16,7 +16,6 @@
 
 #include <math.h> // for pow
 #include <time.h> // for time
-#include <sys/time.h>
 
 using namespace v8;
 using namespace node;
@@ -176,10 +175,7 @@ NAN_GC_CALLBACK(memwatch::after_gc) {
 
         Nan::GetHeapStatistics(&hs);
 
-        timeval tv;
-        gettimeofday(&tv, NULL);
-
-        baton->gc_ts = (tv.tv_sec * 1000000) + tv.tv_usec;
+        baton->gc_ts = uv_hrtime() / 1000;
 
         baton->total_heap_size = hs.total_heap_size();
         baton->total_heap_size_executable = hs.total_heap_size_executable();
