@@ -15,8 +15,9 @@
 #include <sstream>
 
 #include <math.h> // for pow
-#include <time.h> // for time
+// #include <time.h> // for time
 // #include <sys/time.h>
+#include <chrono>
 
 using namespace v8;
 using namespace node;
@@ -24,8 +25,8 @@ using namespace node;
 Local<Object> g_context;
 
 
-#if defined(_WIN32)
-#include <chrono>
+// #if defined(_WIN32)
+
 
 int gettimeofday(struct timeval* tp, struct timezone* tzp) {
   namespace sc = std::chrono;
@@ -37,7 +38,7 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp) {
   return 0;
 }
 
-#endif // _WIN32
+// #endif // _WIN32
 
 class UponGCCallback : public Nan::AsyncResource {
     public:
