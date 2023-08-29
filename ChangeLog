@@ -1,4 +1,4 @@
-Unreleased
+v2.1.0
 	* Fix windows compatibility of memwatch.cc
 
 v2.0.0

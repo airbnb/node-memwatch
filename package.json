@@ -1,42 +1,56 @@
 {
-  "name": "@airbnb/node-memwatch",
+  "name": "@aegenet/node-memwatch",
   "description": "Keep an eye on your memory usage, and discover and isolate leaks.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Lloyd Hilaiel (http://lloyd.io)",
   "engines": {
     "node": ">= 10.0"
   },
+  "main": "include.js",
+  "files": [
+    "include.js",
+    "binding.gyp",
+    "src"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/airbnb/node-memwatch.git"
+    "url": "https://github.com/aegenet/node-memwatch.git"
   },
-  "main": "include.js",
+  "pre-commit": [
+    "build",
+    "test"
+  ],
+  "publishConfig": {
+    "@aegenet:registry": "https://npm.pkg.github.com"
+  },
   "licenses": [
     {
       "type": "wtfpl"
     }
   ],
   "bugs": {
-    "url": "https://github.com/airbnb/node-memwatch/issues"
+    "url": "https://github.com/aegenet/node-memwatch/issues"
   },
   "scripts": {
     "install": "node-gyp rebuild",
+    "build": "rimraf build && node-gyp rebuild",
     "test": "mocha tests --reporter spec"
   },
   "devDependencies": {
-    "mocha": "^2.4.5",
-    "should": "^8.3.1"
+    "@fastify/pre-commit": "^2.0.2",
+    "json": "^11.0.0",
+    "mocha": "^10.2.0",
+    "rimraf": "^5.0.1",
+    "should": "^13.2.3"
   },
   "contributors": [
     "Jed Parsons (@jedp)",
     "Jeff Haynie (@jhaynie)",
-    "Justin Matthews (@jmatthewsr-ms)"
+    "Justin Matthews (@jmatthewsr-ms)",
+    "curvedriver"
   ],
   "dependencies": {
     "bindings": "^1.5.0",
-    "nan": "^2.14.1"
-  },
-  "publishConfig": {
-    "access": "public"
+    "nan": "^2.17.0"
   }
 }

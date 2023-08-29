@@ -1,0 +1,91 @@
+name: Node.js CI
+
+on:
+  release:
+      types: [created]
+  push:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release'
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    # - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        registry-url: 'https://npm.pkg.github.com'
+        # Defaults to the user or organization that owns the workflow file
+        scope: '@aegenet'
+    - name: setup git config
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+    - name: Install dependencies
+      env:
+        CI: true
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      run: rm -rf node_modules && npm ci
+    - name: test
+      run: npm run test
+    - name: build
+      run: node ./.build/build-flow.js build
+
+    - name: Publish packages GitHub
+      env:
+        CI: true
+        NPM_PUBLISH_PUBLIC: '0'
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_GITHUB_AUTH_TOKEN }}
+        NPM_PUSH_REGISTRY: https://npm.pkg.github.com/
+      run: node ./.build/build-flow.js publish
+    # - name: Publish packages npm
+    #   if: github.event_name == 'release'
+    #   env:
+    #     CI: true
+    #     NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+    #     NPM_PUBLISH_PUBLIC: '1'
+    #     NPM_PUSH_REGISTRY: https://registry.npmjs.org/
+    #   run: node ./.build/build-flow.js publish
+
+
+  build_pr:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.ref != 'refs/heads/master'
+
+    # strategy:
+    #   matrix:
+    #     node-version: [16.x, 17.x]
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    # - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        registry-url: 'https://npm.pkg.github.com'
+        # Defaults to the user or organization that owns the workflow file
+        scope: '@aegenet'
+    - name: setup git config
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+    - name: Install dependencies
+      env:
+        CI: true
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      run: rm -rf node_modules && npm ci
+    # - name: lint
+    #   run: npm run lint
+    - name: test
+      run: npm run test
+    - name: build
+      run: node ./.build/build-flow.js build
