@@ -2,6 +2,10 @@ const
 should = require('should'),
 memwatch = require('./');
 
+function hrtimeInMicroseconds() {
+  return process.hrtime.bigint() / 1000n;
+}
+
 describe('the library', function() {
   it('should export a couple functions', function(done) {
     should.exist(memwatch.gc);
@@ -14,10 +18,23 @@ describe('the library', function() {
 });
 describe('calling .gc()', function() {
   it('should cause a stats() event to be emitted', function(done) {
+    let timeBeforeGc;
+
     memwatch.once('stats', function(s) {
+      const timeAfterEvent = hrtimeInMicroseconds();
+
       s.should.be.object;
+
+      (typeof timeBeforeGc).should.equal("bigint");
+      timeAfterEvent.should.be.greaterThan(timeBeforeGc);
+
+      s.gc_ts.should.be.a.Number();
+      s.gc_ts.should.be.within(timeBeforeGc, timeAfterEvent);
+
       done();
     });
+
+    timeBeforeGc = hrtimeInMicroseconds();
     memwatch.gc();
   });
 });
