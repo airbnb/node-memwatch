@@ -16,12 +16,25 @@
 
 #include <math.h> // for pow
 #include <time.h> // for time
-#include <sys/time.h>
+// #include <sys/time.h>
+#include <chrono> // use chrono instead of sys/time.h
 
 using namespace v8;
 using namespace node;
 
 Local<Object> g_context;
+
+// define gettimeofday which uses chrono, earlier it was defined in header sys/time.h which is now deprecated
+int gettimeofday(struct timeval* tp, struct timezone* tzp) {
+  namespace sc = std::chrono;
+  sc::system_clock::duration d = sc::system_clock::now().time_since_epoch();
+  sc::seconds s = sc::duration_cast<sc::seconds>(d);
+  tp->tv_sec = s.count();
+  tp->tv_usec = sc::duration_cast<sc::microseconds>(d - s).count();
+
+  return 0;
+}
+
 
 class UponGCCallback : public Nan::AsyncResource {
     public:
